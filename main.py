@@ -14,4 +14,6 @@ def main():
         default="output/summary.csv",
         help="Path to save output file",
     )
+
+    args = parser.parse_args()
     
