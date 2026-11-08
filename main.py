@@ -6,7 +6,12 @@ def main():
     parser.add_argument(
         "-i", "--input",
         required=True,
-        help="Input FASTQ file",
+        help="Path to input FASTQ file",
     )
 
-    parser.add_argument()
+    parser.add_argument(
+        "-o", "--output",
+        default="output/summary.csv",
+        help="Path to save output file",
+    )
+    
