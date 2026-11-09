@@ -2,8 +2,13 @@ print("seq-qc-toolkit is starting...")
 import argparse
 import os
 
-def checking_if_exist(pathfile):
-    return os.path.isfile(pathfile)
+def checking_if_exist(filepath):
+    return os.path.isfile(filepath)
+
+def read_sequence_file(filepath):
+    with open(filepath, "r") as f:
+        content = filepath.read()
+        return content
 
 
 def main():
@@ -26,4 +31,7 @@ def main():
     if not checking_if_exist(args.input):
         print("File does not Exist")
         return
+
+    content = read_sequence_file(args.input)
+    return content
 
