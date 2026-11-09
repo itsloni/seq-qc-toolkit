@@ -7,7 +7,7 @@ def checking_if_exist(filepath):
 
 def read_sequence_file(filepath):
     with open(filepath, "r") as f:
-        content = filepath.read()
+        content = f.read()
         return content
 
 
