@@ -35,3 +35,7 @@ def main():
     content = read_sequence_file(args.input)
     return content
 
+
+if __name__ == "__main__":
+    main()
+
