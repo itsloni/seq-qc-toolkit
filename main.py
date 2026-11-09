@@ -3,7 +3,7 @@ import argparse
 import os
 
 def checking_if_exist(pathfile):
-    with os.path.isfile(pathfile)
+    return os.path.isfile(pathfile)
 
 
 def main():
@@ -23,4 +23,7 @@ def main():
 
     args = parser.parse_args()
 
+    if not checking_if_exist(args.input):
+        print("File does not Exist")
+        return
 
