@@ -1,5 +1,8 @@
 print("seq-qc-toolkit is starting...")
 import argparse
+import os
+
+def checking_if_exist(pathfile):
 
 
 def main():
@@ -18,3 +21,5 @@ def main():
     )
 
     args = parser.parse_args()
+
+
