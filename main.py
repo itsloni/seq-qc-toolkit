@@ -1,6 +1,8 @@
 print("seq-qc-toolkit is starting...")
 import argparse
 import os
+import json
+from Bio import SeqIO
 
 def checking_if_exist(filepath):
     return os.path.isfile(filepath)
@@ -9,6 +11,17 @@ def read_sequence_file(filepath):
     with open(filepath, "r") as f:
         content = f.read()
         return content
+
+def counting_the_nucleotide(content):
+
+    fasta_file = {}
+    for records in SeqIO.parse(content, "fasta"):
+        fasta_file[records.id] = {
+            "description" : records.description,
+            "sequence" : records.seq,
+        }
+
+    with open(fasta_file, "r"):
 
 
 def main():
