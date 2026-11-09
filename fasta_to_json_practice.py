@@ -10,19 +10,17 @@ def checking_if_exist(input_filepath):
 def sequence_parser(input_filepath):
 
     fasta_data = {}
-    for records in SeqIO.parse(input_filepath, "fasta"):
-        fasta_data[records.id] = {
-            "description" : records.description,
-            "sequence" : str(records.seq),
+    for record in SeqIO.parse(input_filepath, "fasta"):
+        fasta_data[record.id] = {
+            "description" : record.description,
+            "sequence" : str(record.seq),
         }
-    print(fasta_data)
     return fasta_data
 
 def json_dump_file(output_filepath, fasta_data):
 
     with open(output_filepath, "w") as file1:
         json.dump(fasta_data, file1, indent=4)
-        return file1
 
 def main():
     parser = argparse.ArgumentParser(description="FASTA to JSON converter")
