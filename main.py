@@ -3,6 +3,7 @@ import argparse
 import os
 
 def checking_if_exist(pathfile):
+    with os.path.isfile(pathfile)
 
 
 def main():
