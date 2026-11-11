@@ -44,10 +44,15 @@ def fastq_sequence_type(fastq_file):
         fastq_sequence = json_fastq_data[record.id]["sequence"]
         fastq_id = record.id
         fastq_quality = json_fastq_data[record.id]["quality"]
-        print(record.id)
-        print(fastq_quality)
-        print(fastq_sequence)
+        # print(record.id)
+        # print(fastq_quality)
+        # print(fastq_sequence)
     return fastq_id, fastq_sequence, fastq_quality
+
+
+def seq_lenght_check(seq_length):
+    fasta_seq_length = len(seq_length)
+    return fasta_seq_length
 
 
 
@@ -71,14 +76,18 @@ def main():
 
     file_type = checking_sequence_type(args.input)
     if file_type == "fasta":
-        fasta_sequence_type(args.input)
+        fasta_sequence = fasta_sequence_type(args.input)
 
         # will drop next steps later
     elif file_type == "fastq":
-        fastq_sequence_type(args.input)
+        fastq_sequence = fastq_sequence_type(args.input)
         # will drop next steps later
     elif file_type == "unknown":
         print("The file is not a FASTA or FASTQ file. Cannot continue.")
+
+
+    fasta_seq_length = seq_lenght_check(fasta_sequence)
+    print(f"The length for your fasta sequence file is {fasta_seq_length}")
 
 
 
