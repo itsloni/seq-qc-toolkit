@@ -35,22 +35,23 @@ def fasta_sequence_type(fasta_file):
 
 
 
-    with open(fasta_file, "r") as f:
-        content = f.read()
-        print(content)
-        for line in content:
-            print(line)
-            if line.startswith(">"):
-                print(line)
-        print(line[3:])
-
-            # # print(repr(line))
-            # print(line[:-1])
-            # # return
-
-
 def fastq_sequence_type(fastq_file):
-    pass
+    json_fastq_data = {}
+    for record in SeqIO.parse(fastq_file, "fastq"):
+        json_fastq_data[record.id] = {
+            "description" : record.description,
+            "sequence" : str(record.seq),
+            "quality" : record.letter_annotations["phred_quality"]
+        }
+        fastq_sequence = json_fastq_data[record.id]["sequence"]
+        fastq_id = json_fastq_data[record.id]
+        fastq_quality = json_fastq_data[record.id]["quality"]
+        print(fastq_id)
+        print(fastq_quality)
+        print(fastq_sequence)
+        return fastq_id, fastq_sequence, fastq_quality
+
+
 
 def main():
     parser = argparse.ArgumentParser(description="seq-qc-toolkit: Quality control for FASTA and FASTQ files")
