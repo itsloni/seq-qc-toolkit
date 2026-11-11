@@ -1,7 +1,9 @@
+import Bio
+
 print("seq-qc-toolkit is starting...")
 import os
 import argparse
-#from Bio import SeqIO
+from Bio import SeqIO
 
 def checking_if_exist(filepath):
     return os.path.isfile(filepath)
@@ -19,14 +21,32 @@ def checking_sequence_type(filepath):
 
         return file_type
 
+
 def fasta_sequence_type(fasta_file):
-    print(">>> Entered fasta_sequence_type function")
-    print("File path is:", fasta_file)
+    json_fasta_data = {}
+    for record in SeqIO.parse(fasta_file, "fasta"):
+        json_fasta_data[record.id] = {
+            "description" : record.description,
+            "sequence" : str(record.seq)
+        }
+        fasta_sequence = json_fasta_data[record.id]["sequence"]
+        print(fasta_sequence)
+        return fasta_sequence
+
+
+
     with open(fasta_file, "r") as f:
-        for line in f:
-            print(repr(line))
-            print(line[1:])
-            # return
+        content = f.read()
+        print(content)
+        for line in content:
+            print(line)
+            if line.startswith(">"):
+                print(line)
+        print(line[3:])
+
+            # # print(repr(line))
+            # print(line[:-1])
+            # # return
 
 
 def fastq_sequence_type(fastq_file):
@@ -53,15 +73,13 @@ def main():
     file_type = checking_sequence_type(args.input)
     if file_type == "fasta":
         fasta_sequence_type(args.input)
-        print("happy")
+
         # will drop next steps later
     elif file_type == "fastq":
         fastq_sequence_type(args.input)
         # will drop next steps later
     elif file_type == "unknown":
         print("The file is not a FASTA or FASTQ file. Cannot continue.")
-
-
 
 
 
