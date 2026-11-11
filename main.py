@@ -1,5 +1,3 @@
-import Bio
-
 print("seq-qc-toolkit is starting...")
 import os
 import argparse
@@ -31,7 +29,7 @@ def fasta_sequence_type(fasta_file):
         }
         fasta_sequence = json_fasta_data[record.id]["sequence"]
         print(fasta_sequence)
-        return fasta_sequence
+    return fasta_sequence
 
 
 
@@ -44,12 +42,12 @@ def fastq_sequence_type(fastq_file):
             "quality" : record.letter_annotations["phred_quality"]
         }
         fastq_sequence = json_fastq_data[record.id]["sequence"]
-        fastq_id = json_fastq_data[record.id]
+        fastq_id = record.id
         fastq_quality = json_fastq_data[record.id]["quality"]
-        print(fastq_id)
+        print(record.id)
         print(fastq_quality)
         print(fastq_sequence)
-        return fastq_id, fastq_sequence, fastq_quality
+    return fastq_id, fastq_sequence, fastq_quality
 
 
 
