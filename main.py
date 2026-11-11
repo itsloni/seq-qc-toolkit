@@ -1,7 +1,7 @@
 print("seq-qc-toolkit is starting...")
 import os
 import argparse
-from Bio import SeqIO
+#from Bio import SeqIO
 
 def checking_if_exist(filepath):
     return os.path.isfile(filepath)
@@ -20,7 +20,14 @@ def checking_sequence_type(filepath):
         return file_type
 
 def fasta_sequence_type(fasta_file):
-    pass
+    print(">>> Entered fasta_sequence_type function")
+    print("File path is:", fasta_file)
+    with open(fasta_file, "r") as f:
+        for line in f:
+            print(repr(line))
+            print(line[1:])
+            # return
+
 
 def fastq_sequence_type(fastq_file):
     pass
@@ -46,6 +53,7 @@ def main():
     file_type = checking_sequence_type(args.input)
     if file_type == "fasta":
         fasta_sequence_type(args.input)
+        print("happy")
         # will drop next steps later
     elif file_type == "fastq":
         fastq_sequence_type(args.input)
@@ -57,7 +65,5 @@ def main():
 
 
 
-
-
-
-
+if __name__ == "__main__":
+    main()
