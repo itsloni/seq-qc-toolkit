@@ -50,9 +50,13 @@ def fastq_sequence_type(fastq_file):
     return fastq_id, fastq_sequence, fastq_quality
 
 
-def seq_lenght_check(seq_length):
-    fasta_seq_length = len(seq_length)
-    return fasta_seq_length
+def seq_length_checker(fa_seq_length, fq_seq_length):
+    if fa_seq_length:
+        fasta_seq_length = len(fa_seq_length)
+        return fasta_seq_length
+    elif fq_seq_length:
+        fastq_seq_length= len(fq_seq_length)
+        return fastq_seq_length
 
 
 
@@ -86,8 +90,10 @@ def main():
         print("The file is not a FASTA or FASTQ file. Cannot continue.")
 
 
-    fasta_seq_length = seq_lenght_check(fasta_sequence)
+    fasta_seq_length = seq_length_checker(fasta_sequence)
     print(f"The length for your fasta sequence file is {fasta_seq_length}")
+    fastq_seq_length = seq_length_checker(fastq_sequence)
+    print(f"The length for your fasta sequence file is {fastq_seq_length}")
 
 
 
