@@ -30,7 +30,6 @@ def fasta_sequence_type(fasta_file):
             "sequence" : str(record.seq),
         }
         fasta_sequences.append(fasta_dict)
-        print(fasta_sequences)
     return fasta_sequences
 
 
@@ -44,7 +43,7 @@ def fastq_sequence_type(fastq_file):
             "quality" : record.letter_annotations["phred_quality"],
         }
         fastq_sequences.append(fastq_dict)
-        print(json.dumps(fastq_sequences, indent=4))
+        #print(json.dumps(fastq_sequences, indent=4))
     return fastq_sequences
 
 
@@ -53,7 +52,6 @@ def seq_length_checker(full_sequence_data):
     for sequences in full_sequence_data:
         sequence_length = len(sequences["sequence"])
         full_seq_length.append(sequence_length)
-    print(full_seq_length)
     return full_seq_length
 
 
@@ -61,36 +59,57 @@ def seq_length_stat(sequence_length):
     min_length = min(sequence_length)
     max_length = max(sequence_length)
     average_length = sum(sequence_length)/len(sequence_length)
-
     return min_length, max_length, average_length
 
 def seq_gc_content(full_sequence_data, sequence_length):
     num_of_gc_content = []
+    individual_gc_content = []
 
     for sequences in full_sequence_data:
         sequence = sequences["sequence"]
+        seq_length = len(sequence)
         num_of_g_content = 0
         num_of_c_content = 0
-        for word in sequence:
-            if word == "G" or word == "C":
-                if word == "G":
+        for bases in sequence:
+            if bases == "G" or bases == "C":
+                if bases == "G":
                     num_of_g_content += 1
                 else:
                     num_of_c_content += 1
+
         total_gc = num_of_g_content + num_of_c_content
+        individual_gc_content.append((total_gc/seq_length) * 100)
         num_of_gc_content.append(total_gc)
     percent_gc_content = sum(num_of_gc_content)/sum(sequence_length) * 100
-    # print(sum(sequence_length))
-    # print(percent_gc_content)
-    # print(num_of_gc_content)
-    return percent_gc_content
+    return percent_gc_content, individual_gc_content
 
-# def calc_n_content(full_sequence_data, sequence_length):
-#     seq_lenght =
-#
-#     for sequences in full_sequence_data:
-#         sequence = sequences["sequence"]
-#         for
+def calc_n_content(full_sequence_data, sequence_length):
+    n_content = []
+    individual_seq_n_content = []
+    for sequences in full_sequence_data:
+        bases_n_content = 0
+        sequence = sequences["sequence"]
+        seq_length = len(sequence)
+        for bases in sequence:
+            if bases == "N":
+                bases_n_content += 1
+        individual_seq_n_content.append((bases_n_content/seq_length) * 100)
+        n_content.append(bases_n_content)
+    full_n_content = sum(n_content)
+    percent_n_content = full_n_content/sum(sequence_length) * 100
+    return percent_n_content, individual_seq_n_content
+
+def average_quality_score(full_sequence_data, full_seq_length, ):
+    individual_quality_scores = []
+    avg_qual_list_score = []
+    for quality_scores in full_sequence_data:
+        quality_score = quality_scores["quality"]
+        avg_qual_list_score.append(sum(quality_score))
+        individual_qual = sum(quality_score) / len(quality_scores["quality"])
+        individual_quality_scores.append(individual_qual)
+    total_avg_quality_score = sum(avg_qual_list_score)/sum(full_seq_length)
+    return total_avg_quality_score, individual_quality_scores
+
 
 
 
@@ -119,33 +138,33 @@ def main():
         fasta_sequence = fasta_sequence_type(args.input)
         full_seq_length =  seq_length_checker(fasta_sequence)
         min_length, max_length, average_length = seq_length_stat(full_seq_length)
-        percent_gc_content = seq_gc_content(fasta_sequence, full_seq_length)
-        # n_content = calc_n_content(fasta_sequence)
-        print(f"Your GC_content is: {percent_gc_content} percent")
+        percent_gc_content, individual_gc_content = seq_gc_content(fasta_sequence, full_seq_length)
+        percent_n_content, individual_seq_n_content = calc_n_content(fasta_sequence, full_seq_length)
+        print(f"Your total N content percentage is: {percent_n_content} percent and the individual N percent is : {individual_seq_n_content}")
+        print(f"Your total GC_content is: {percent_gc_content} percent and your Individual GC_content is: {individual_gc_content}")
         print(f"Your fasta length_stats are as follows: min = {min_length}, max = {max_length}, avg = {average_length}")
         print(f"Here is your fasta length: {full_seq_length} and the Total sum of fasta length is {sum(full_seq_length)}")
 
-        # will drop next steps later
+
     elif file_type == "fastq":
         fastq_sequence = fastq_sequence_type(args.input)
         full_seq_length = seq_length_checker(fastq_sequence)
         min_length, max_length, average_length = seq_length_stat(full_seq_length)
-        percent_gc_content = seq_gc_content(fastq_sequence, full_seq_length)
-        print(f"Your GC_content is: {percent_gc_content} percent")
+        percent_gc_content, individual_gc_content = seq_gc_content(fastq_sequence, full_seq_length)
+        percent_n_content, individual_seq_n_content = calc_n_content(fastq_sequence, full_seq_length)
+        total_avg_quality_score, individual_quality_scores = average_quality_score(fastq_sequence, full_seq_length)
+        print(f"Your total Average quality score is : {total_avg_quality_score} and the individual Average quality score is: {individual_quality_scores}")
+        print(f"Your total N content percentage is: {percent_n_content} percent and the individual N percent is : {individual_seq_n_content}")
+        print(f"Your total GC_content is: {percent_gc_content} percent and your Individual GC_content is: {individual_gc_content}")
         print(f"Your fastq length_stats are as follows: min = {min_length}, max = {max_length}, avg = {average_length}")
         print(f"Here is your fastq length list: {full_seq_length} and the Total sum of fastq length is {sum(full_seq_length)}")
-        # seq_length_checker(fastq_sequence)
 
-        # will drop next steps later
+
     elif file_type == "unknown":
         print("The file is not a FASTA or FASTQ file. Cannot continue.")
 
 
-    # fasta_seq_length, fastq_seq_length = fasta_seq_length_checker(fasta_sequence, fastq_sequence)
-    # print(f"The length for your fasta sequence file is {fasta_seq_length}")
-    # print(f"The length for your fasta sequence file is {fastq_seq_length}")
-    # fastq_seq_length = seq_length_checker(fastq_sequence)
-    # print(f"The length for your fasta sequence file is {fastq_seq_length}")
+
 
 
 
