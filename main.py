@@ -55,10 +55,12 @@ def seq_length_checker(seq_length):
     return full_seq_length
 
 
-#     elif fq_seq_length:
-#         fastq_seq_length= len(fq_seq_length)
-#         return fastq_seq_length
+def seq_length_stat(sequence_length):
+    min_length = min(sequence_length)
+    max_length = max(sequence_length)
+    average_length = sum(sequence_length)/len(sequence_length)
 
+    return min_length, max_length, average_length
 
 
 def main():
@@ -83,12 +85,16 @@ def main():
     if file_type == "fasta":
         fasta_sequence = fasta_sequence_type(args.input)
         full_seq_length =  seq_length_checker(fasta_sequence)
+        min_length, max_length, average_length = seq_length_stat(full_seq_length)
+        print(f"Your fasta length_stats are as follows: min = {min_length}, max = {max_length}, avg = {average_length}")
         print(f"Here is your fasta length: {full_seq_length}")
 
         # will drop next steps later
     elif file_type == "fastq":
         fastq_sequence = fastq_sequence_type(args.input)
         full_seq_length = seq_length_checker(fastq_sequence)
+        min_length, max_length, average_length = seq_length_stat(full_seq_length)
+        print(f"Your fastq length_stats are as follows: min = {min_length}, max = {max_length}, avg = {average_length}")
         print(f"Here is your fastq length: {full_seq_length}")
         # seq_length_checker(fastq_sequence)
 
