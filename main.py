@@ -59,6 +59,7 @@ def seq_length_stat(sequence_length):
     min_length = min(sequence_length)
     max_length = max(sequence_length)
     average_length = sum(sequence_length)/len(sequence_length)
+    average_length = round(average_length, 2)
     return min_length, max_length, average_length
 
 def seq_gc_content(full_sequence_data, sequence_length):
@@ -78,9 +79,10 @@ def seq_gc_content(full_sequence_data, sequence_length):
                     num_of_c_content += 1
 
         total_gc = num_of_g_content + num_of_c_content
-        individual_gc_content.append((total_gc/seq_length) * 100)
+        individual_gc_content.append(round(total_gc / seq_length) * 100)
         num_of_gc_content.append(total_gc)
     percent_gc_content = sum(num_of_gc_content)/sum(sequence_length) * 100
+    percent_gc_content = round(percent_gc_content, 2)
     return percent_gc_content, individual_gc_content
 
 def calc_n_content(full_sequence_data, sequence_length):
@@ -97,9 +99,10 @@ def calc_n_content(full_sequence_data, sequence_length):
         n_content.append(bases_n_content)
     full_n_content = sum(n_content)
     percent_n_content = full_n_content/sum(sequence_length) * 100
+    percent_n_content = round(percent_n_content, 2)
     return percent_n_content, individual_seq_n_content
 
-def average_quality_score(full_sequence_data, full_seq_length, ):
+def average_quality_score(full_sequence_data, full_seq_length):
     individual_quality_scores = []
     avg_qual_list_score = []
     for quality_scores in full_sequence_data:
@@ -108,10 +111,8 @@ def average_quality_score(full_sequence_data, full_seq_length, ):
         individual_qual = sum(quality_score) / len(quality_scores["quality"])
         individual_quality_scores.append(individual_qual)
     total_avg_quality_score = sum(avg_qual_list_score)/sum(full_seq_length)
+    total_avg_quality_score = round(total_avg_quality_score, 2)
     return total_avg_quality_score, individual_quality_scores
-
-
-
 
 
 
@@ -162,8 +163,6 @@ def main():
 
     elif file_type == "unknown":
         print("The file is not a FASTA or FASTQ file. Cannot continue.")
-
-
 
 
 
