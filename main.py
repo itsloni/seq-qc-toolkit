@@ -1,6 +1,7 @@
 print("seq-qc-toolkit is starting...")
 import os
 import argparse
+import json
 from Bio import SeqIO
 
 def checking_if_exist(filepath):
@@ -21,42 +22,39 @@ def checking_sequence_type(filepath):
 
 
 def fasta_sequence_type(fasta_file):
-    json_fasta_data = {}
+    fasta_sequences = []
     for record in SeqIO.parse(fasta_file, "fasta"):
-        json_fasta_data[record.id] = {
+        fasta_dict = {
             "description" : record.description,
-            "sequence" : str(record.seq)
+            "sequence" : str(record.seq),
         }
-        fasta_sequence = json_fasta_data[record.id]["sequence"]
-        print(fasta_sequence)
-    return fasta_sequence
+        fasta_sequences.append(fasta_dict)
+        print(fasta_sequences)
+    return fasta_sequences
 
 
 
 def fastq_sequence_type(fastq_file):
-    json_fastq_data = {}
+    fastq_sequences = []
     for record in SeqIO.parse(fastq_file, "fastq"):
-        json_fastq_data[record.id] = {
+        fastq_dict = {
             "description" : record.description,
             "sequence" : str(record.seq),
-            "quality" : record.letter_annotations["phred_quality"]
+            "quality" : record.letter_annotations["phred_quality"],
         }
-        fastq_sequence = json_fastq_data[record.id]["sequence"]
-        fastq_id = record.id
-        fastq_quality = json_fastq_data[record.id]["quality"]
-        # print(record.id)
-        # print(fastq_quality)
-        # print(fastq_sequence)
-    return fastq_id, fastq_sequence, fastq_quality
+        fastq_sequences.append(fastq_dict)
+        print(json.dumps(fastq_sequences, indent=4))
+    return fastq_sequences
 
 
-def seq_length_checker(fa_seq_length, fq_seq_length):
-    if fa_seq_length:
-        fasta_seq_length = len(fa_seq_length)
-        return fasta_seq_length
-    elif fq_seq_length:
-        fastq_seq_length= len(fq_seq_length)
-        return fastq_seq_length
+def seq_length_checker(seq_length):
+    full_seq_length = len(seq_length)
+    return full_seq_length
+
+
+#     elif fq_seq_length:
+#         fastq_seq_length= len(fq_seq_length)
+#         return fastq_seq_length
 
 
 
@@ -81,19 +79,26 @@ def main():
     file_type = checking_sequence_type(args.input)
     if file_type == "fasta":
         fasta_sequence = fasta_sequence_type(args.input)
+        full_seq_length =  seq_length_checker(fasta_sequence[0]["sequence"])
+        print(f"Here is your fasta length: {full_seq_length}")
 
         # will drop next steps later
     elif file_type == "fastq":
         fastq_sequence = fastq_sequence_type(args.input)
+        full_seq_length = seq_length_checker(fastq_sequence[1]["sequence"])
+        print(f"Here is your fastq length: {full_seq_length}")
+        # seq_length_checker(fastq_sequence)
+
         # will drop next steps later
     elif file_type == "unknown":
         print("The file is not a FASTA or FASTQ file. Cannot continue.")
 
 
-    fasta_seq_length = seq_length_checker(fasta_sequence)
-    print(f"The length for your fasta sequence file is {fasta_seq_length}")
-    fastq_seq_length = seq_length_checker(fastq_sequence)
-    print(f"The length for your fasta sequence file is {fastq_seq_length}")
+    # fasta_seq_length, fastq_seq_length = fasta_seq_length_checker(fasta_sequence, fastq_sequence)
+    # print(f"The length for your fasta sequence file is {fasta_seq_length}")
+    # print(f"The length for your fasta sequence file is {fastq_seq_length}")
+    # fastq_seq_length = seq_length_checker(fastq_sequence)
+    # print(f"The length for your fasta sequence file is {fastq_seq_length}")
 
 
 
