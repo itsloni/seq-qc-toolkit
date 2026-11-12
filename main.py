@@ -48,7 +48,10 @@ def fastq_sequence_type(fastq_file):
 
 
 def seq_length_checker(seq_length):
-    full_seq_length = len(seq_length)
+    full_seq_length = []
+    for sequences in seq_length:
+        sequence_length = len(sequences["sequence"])
+        full_seq_length.append(sequence_length)
     return full_seq_length
 
 
@@ -79,13 +82,13 @@ def main():
     file_type = checking_sequence_type(args.input)
     if file_type == "fasta":
         fasta_sequence = fasta_sequence_type(args.input)
-        full_seq_length =  seq_length_checker(fasta_sequence[0]["sequence"])
+        full_seq_length =  seq_length_checker(fasta_sequence)
         print(f"Here is your fasta length: {full_seq_length}")
 
         # will drop next steps later
     elif file_type == "fastq":
         fastq_sequence = fastq_sequence_type(args.input)
-        full_seq_length = seq_length_checker(fastq_sequence[1]["sequence"])
+        full_seq_length = seq_length_checker(fastq_sequence)
         print(f"Here is your fastq length: {full_seq_length}")
         # seq_length_checker(fastq_sequence)
 
