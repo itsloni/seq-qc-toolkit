@@ -159,13 +159,13 @@ def main():
             ],
             "Value": [
                 "FASTA",
-                f"{num_of_seq}",
-                f"{sum(full_seq_length)}",
-                f"{average_length}",
-                f"{min_length}",
-                f"{max_length}",
-                f"{percent_gc_content}",
-                f"{percent_n_content}"
+                num_of_seq,
+                sum(full_seq_length),
+                average_length,
+                min_length,
+                max_length,
+                percent_gc_content,
+                percent_n_content
             ],
         }
         save_summary(args.output, summary_data)
