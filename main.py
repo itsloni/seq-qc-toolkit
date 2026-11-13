@@ -33,7 +33,6 @@ def fasta_sequence_type(fasta_file):
     return fasta_sequences
 
 
-
 def fastq_sequence_type(fastq_file):
     fastq_sequences = []
     for record in SeqIO.parse(fastq_file, "fastq"):
@@ -52,7 +51,8 @@ def seq_length_checker(full_sequence_data):
     for sequences in full_sequence_data:
         sequence_length = len(sequences["sequence"])
         full_seq_length.append(sequence_length)
-    return full_seq_length
+    num_of_seq = len(full_seq_length)
+    return full_seq_length, num_of_seq
 
 
 def seq_length_stat(sequence_length):
@@ -114,6 +114,11 @@ def average_quality_score(full_sequence_data, full_seq_length):
     total_avg_quality_score = round(total_avg_quality_score, 2)
     return total_avg_quality_score, individual_quality_scores
 
+def save_summary(output_file, summary_data):
+    df = pandas.DataFrame(summary_data)
+    df.to_csv(output_file, index=False)
+    return output_file
+
 
 
 def main():
@@ -137,28 +142,76 @@ def main():
     file_type = checking_sequence_type(args.input)
     if file_type == "fasta":
         fasta_sequence = fasta_sequence_type(args.input)
-        full_seq_length =  seq_length_checker(fasta_sequence)
+        full_seq_length, num_of_seq =  seq_length_checker(fasta_sequence)
         min_length, max_length, average_length = seq_length_stat(full_seq_length)
         percent_gc_content, individual_gc_content = seq_gc_content(fasta_sequence, full_seq_length)
         percent_n_content, individual_seq_n_content = calc_n_content(fasta_sequence, full_seq_length)
+        summary_data = {
+            "Metric": [
+                "File Type",
+                "Number of Sequence",
+                "Total Bases",
+                "Average Length",
+                "Min Length",
+                "Max Length",
+                "GC Content (%)",
+                "N Content (%)"
+            ],
+            "Value": [
+                "FASTA",
+                f"{num_of_seq}",
+                f"{sum(full_seq_length)}",
+                f"{average_length}",
+                f"{min_length}",
+                f"{max_length}",
+                f"{percent_gc_content}",
+                f"{percent_n_content}"
+            ],
+        }
+        save_summary(args.output, summary_data)
         print(f"Your total N content percentage is: {percent_n_content} percent and the individual N percent is : {individual_seq_n_content}")
         print(f"Your total GC_content is: {percent_gc_content} percent and your Individual GC_content is: {individual_gc_content}")
         print(f"Your fasta length_stats are as follows: min = {min_length}, max = {max_length}, avg = {average_length}")
-        print(f"Here is your fasta length: {full_seq_length} and the Total sum of fasta length is {sum(full_seq_length)}")
+        print(f"Here is your fasta length: {full_seq_length}, number of sequences is : {num_of_seq}, and the Total sum of fasta length is {sum(full_seq_length)}")
 
 
     elif file_type == "fastq":
         fastq_sequence = fastq_sequence_type(args.input)
-        full_seq_length = seq_length_checker(fastq_sequence)
+        full_seq_length, num_of_seq = seq_length_checker(fastq_sequence)
         min_length, max_length, average_length = seq_length_stat(full_seq_length)
         percent_gc_content, individual_gc_content = seq_gc_content(fastq_sequence, full_seq_length)
         percent_n_content, individual_seq_n_content = calc_n_content(fastq_sequence, full_seq_length)
         total_avg_quality_score, individual_quality_scores = average_quality_score(fastq_sequence, full_seq_length)
+        summary_data = {
+            "Metric": [
+                "File Type",
+                "Number of Sequence",
+                "Total Bases",
+                "Average Length",
+                "Min Length",
+                "Max Length",
+                "GC Content (%)",
+                "N Content (%)",
+                "Average Quality Score"
+            ],
+            "Value": [
+                "FASTQ",
+                f"{num_of_seq}",
+                f"{sum(full_seq_length)}",
+                f"{average_length}",
+                f"{min_length}",
+                f"{max_length}",
+                f"{percent_gc_content}",
+                f"{percent_n_content}",
+                f"{total_avg_quality_score}"
+            ],
+        }
+        save_summary(args.output, summary_data)
         print(f"Your total Average quality score is : {total_avg_quality_score} and the individual Average quality score is: {individual_quality_scores}")
         print(f"Your total N content percentage is: {percent_n_content} percent and the individual N percent is : {individual_seq_n_content}")
         print(f"Your total GC_content is: {percent_gc_content} percent and your Individual GC_content is: {individual_gc_content}")
         print(f"Your fastq length_stats are as follows: min = {min_length}, max = {max_length}, avg = {average_length}")
-        print(f"Here is your fastq length list: {full_seq_length} and the Total sum of fastq length is {sum(full_seq_length)}")
+        print(f"Here is your fastq length list: {full_seq_length}, number of sequences is : {num_of_seq}, and the Total sum of fastq length is {sum(full_seq_length)}")
 
 
     elif file_type == "unknown":
