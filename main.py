@@ -1,7 +1,6 @@
 print("seq-qc-toolkit is starting...")
 import os
 import argparse
-import json
 import pandas
 from Bio import SeqIO
 
@@ -42,7 +41,6 @@ def fastq_sequence_type(fastq_file):
             "quality" : record.letter_annotations["phred_quality"],
         }
         fastq_sequences.append(fastq_dict)
-        #print(json.dumps(fastq_sequences, indent=4))
     return fastq_sequences
 
 
