@@ -1,10 +1,9 @@
 Metric,Value
-File Type,FASTQ
-Number of Sequence,3
-Total Bases,73
-Average Length,24.33
-Min Length,24
-Max Length,25
-GC Content (%),47.95
-N Content (%),4.11
-Average Quality Score,33.42
+File Type,FASTA
+Number of Sequence,1
+Total Bases,1451
+Average Length,1451.0
+Min Length,1451
+Max Length,1451
+GC Content (%),55.34
+N Content (%),0.0
