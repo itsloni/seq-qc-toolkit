@@ -41,7 +41,7 @@ This tool calculates essential sequence statistics and generates a clean summary
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/seq-qc-toolkit.git
+git clone https://github.com/itsloni/seq-qc-toolkit.git
 cd seq-qc-toolkit
 
 - Clean terminal summary
